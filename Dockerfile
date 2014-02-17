@@ -7,7 +7,7 @@ RUN apt-get update
 # basics
 RUN apt-get install -y dialog
 RUN apt-get install -y openssh-server git-core openssh-client curl
-RUN apt-get install -y openssl libssl-dev libreadline6 libreadline6-dev zlib1g zlib1g-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev automake libtool pkg-config
+RUN apt-get install -y openssl libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev
 
 # install RVM, Ruby, and Bundler
 RUN \curl -L https://get.rvm.io | bash -s stable
