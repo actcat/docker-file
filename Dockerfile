@@ -5,12 +5,15 @@ MAINTAINER Koichiro Sumi "koichiro.sumi@actcat.co.jp"
 RUN apt-get update
 
 # basics
+RUN apt-get install -y dialog
 RUN apt-get install -y openssh-server git-core openssh-client curl
-RUN apt-get install -y build-essential
-RUN apt-get install -y openssl libreadline6 libreadline6-dev curl zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev automake libtool pkg-config
+RUN apt-get install -y openssl libssl-dev libreadline6 libreadline6-dev zlib1g zlib1g-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev automake libtool pkg-config
 
 # install RVM, Ruby, and Bundler
-RUN         \curl -sSL https://get.rvm.io | bash -s stable --ruby
+RUN \curl -L https://get.rvm.io | bash -s stable
+RUN /bin/bash -l -c "rvm requirements"
+RUN /bin/bash -l -c "rvm install 2.1.0"
+RUN /bin/bash -l -c "gem install bundler --no-ri --no-rdoc"
 
 # Redis
 RUN         apt-get -y install redis-server
