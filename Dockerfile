@@ -16,8 +16,7 @@ RUN apt-get install -y aptitude
 RUN aptitude update
 RUN aptitude upgrade -y
 
-RUN aptitude -y install dialog
-RUN aptitude -y install build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison subversion pkg-config libpq5 libpq-dev build-essential git-core curl libcurl4-gnutls-dev python-software-properties libffi-dev libgdbm-dev vim
+RUN aptitude -y install dialog git curl
 
 # install RVM, Ruby, and Bundler
 RUN curl -L https://get.rvm.io | bash -s stable --ruby
