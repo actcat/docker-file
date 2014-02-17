@@ -16,7 +16,7 @@ RUN curl -L https://get.rvm.io | bash -s stable
 
 RUN echo 'source /usr/local/rvm/scripts/rvm' >> /etc/bash.bashrc
 
-ENV PATH /usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/rvm/gems/ruby-2.0.0-p247/bin:/opt/nginx/sbin
+ENV PATH /usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 RUN /bin/bash -l -c 'rvm install 2.0.0'
 CMD /bin/bash -l -c 'rvm use 2.0.0 --default'
