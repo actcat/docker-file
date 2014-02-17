@@ -17,6 +17,7 @@ RUN aptitude update
 RUN aptitude upgrade -y
 
 RUN aptitude -y install dialog git curl
+RUN aptitude -y install patch, gawk, g++, gcc, make, libc6-dev, patch, libreadline6-dev, zlib1g-dev, libssl-dev, libyaml-dev, libsqlite3-dev, sqlite3, autoconf, libgdbm-dev, libncurses5-dev, automake, libtool, bison, pkg
 
 # install RVM, Ruby, and Bundler
 RUN curl -L https://get.rvm.io | bash -s stable --ruby
