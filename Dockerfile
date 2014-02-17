@@ -3,8 +3,7 @@ MAINTAINER Koichiro Sumi "koichiro.sumi@actcat.co.jp"
 
 # turn on universe packages
 RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
-RUN apt-get update
-RUN apt-get upgrade -y
+RUN apt-get update && apt-get upgrade
 
 # Ensure UTF-8
 RUN locale-gen en_US.UTF-8
@@ -13,8 +12,7 @@ ENV LC_ALL     en_US.UTF-8
 
 # Install rvm Prerequisites
 RUN apt-get install -y aptitude
-RUN aptitude update
-RUN aptitude upgrade -y
+RUN aptitude update && aptitude upgrade
 
 RUN aptitude -y install dialog git curl
 RUN aptitude -y install patch, gawk, g++, gcc, make, libc6-dev, patch, libreadline6-dev, zlib1g-dev, libssl-dev, libyaml-dev, libsqlite3-dev, sqlite3, autoconf, libgdbm-dev, libncurses5-dev, automake, libtool, bison, pkg
