@@ -12,7 +12,8 @@ ENV LANG       en_US.UTF-8
 ENV LC_ALL     en_US.UTF-8
 
 # Install rvm Prerequisites
-RUN apt-get -y -q install build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison subversion pkg-config libpq5 libpq-dev build-essential git-core curl libcurl4-gnutls-dev python-software-properties libffi-dev libgdbm-dev vim
+RUN apt-get install -y openssh-server git-core openssh-client curl
+RUN apt-get install -y openssl libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev
 
 # install RVM, Ruby, and Bundler
 RUN curl -L https://get.rvm.io | bash -s stable --ruby
