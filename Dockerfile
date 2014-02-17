@@ -12,9 +12,9 @@ ENV LANG       en_US.UTF-8
 ENV LC_ALL     en_US.UTF-8
 
 # Install rvm Prerequisites
-RUN apt-get install -y perl-base
-RUN apt-get install -y perl libswitch-perl perl-modules liberror-perl openssh-server git git-core openssh-client curl
-RUN apt-get install -y openssl libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev
+RUN apt-get install -y aptitude
+RUN aptitude install -y perl-base perl libswitch-perl perl-modules liberror-perl openssh-server git git-core openssh-client curl
+RUN aptitude install -y openssl libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev
 
 # install RVM, Ruby, and Bundler
 RUN curl -L https://get.rvm.io | bash -s stable --ruby
