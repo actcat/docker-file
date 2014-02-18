@@ -69,7 +69,7 @@ Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |s
       ch.on_close { puts "done!" }
     end
 
-     ch.exec "echo $PATH" do |ch, success|
+    ch.exec "echo $PATH" do |ch, success|
       raise "could not execute command" unless success
 
       # "on_data" is called when the process writes something to stdout
@@ -118,8 +118,7 @@ echo 'test:
 ' > config/database.yml
 "
 # スクリプトの実行
-ssh.exec! "#{script}" do |ch, success|
-end
+ssh.exec! "#{script}"
 
 # 実行スクリプトの作成
 script = "
