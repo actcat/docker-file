@@ -42,13 +42,26 @@ ssh_password = 'screencast'
 p "#{ssh_user}@#{ssh_host} -p #{ssh_port}"
 
 require 'net/ssh'
+module Net
+  module SSH
+    module Connection
+      class Channnell
+        
+      end
+    end
+  end
+end
+
 Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
   # capture all stderr and stdout output from a remote process
   ssh.open_channel do |channel|
+    exec_results = []
+    channel.
     channel.exec("hostname") do |ch, success|
       abort "could not execute command" unless success
       channel.on_data do |ch, data|
         puts "got stdout: #{data}"
+        exec_results << data
         channel.send_data "something for stdin\n"
       end
 
@@ -60,6 +73,13 @@ Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |s
         puts "channel is closing!"
       end
     end
+    channel.exec 'echo $SHELL' do |ch, success|
+      channel.on_data do |ch, data|
+        exec_results << data
+      end
+    end
+
+
     puts "Welcome to "
     puts "SHELL = #{channel.exec 'echo $SHELL'}"
     puts "BASH = #{channel.exec 'echo $BASH'}"
@@ -95,9 +115,8 @@ echo 'test:
 ' > config/database.yml
 "
 # スクリプトの実行
-result = channel.exec "#{script}"
-p result
-p 2
+channel.exec "#{script}" do |ch, success|
+end
 
 # 実行スクリプトの作成
 script = "
@@ -126,6 +145,11 @@ result = channel.exec "#{script}"
 p result
 
 p 4
+
+require 'pry'
+pry
+
+p channel
   end
 
   ssh.loop
