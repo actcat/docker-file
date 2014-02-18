@@ -40,30 +40,15 @@ ssh_user = 'root'
 ssh_password = 'screencast'
 
 p "#{ssh_user}@#{ssh_host} -p #{ssh_port}"
-p "#{ssh_password}"
 
 require 'net/ssh'
 Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
   # capture all stderr and stdout output from a remote process
-  output = ssh.exec!("hostname")
-  p output
-
-  output = ssh.exec!("pwd")
-  p output
-
-  # capture only stdout matching a particular pattern
-  stdout = ""
-  ssh.exec!("ls -l") do |channel, stream, data|
-    stdout << data if stream == :stdout
-  end
-  puts stdout
+  puts "Welcome to #{ssh.exec!("hostname")}"
 
   # run multiple processes in parallel to completion
-  ssh.exec! "echo hi"
-  ssh.loop
-
   # 実行スクリプトの作成
-  dir_name = "popcode"
+  dir_name = "/var/tmp/popcode"
 
   p 0
   script = "
