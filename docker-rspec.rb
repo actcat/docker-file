@@ -56,7 +56,6 @@ Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |s
   # capture all stderr and stdout output from a remote process
   ssh.open_channel do |channel|
     exec_results = []
-    channel.
     channel.exec("hostname") do |ch, success|
       abort "could not execute command" unless success
       channel.on_data do |ch, data|
