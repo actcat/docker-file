@@ -49,6 +49,9 @@ Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |s
   puts "SHELL = #{ssh.exec! 'echo $SHELL'}"
   puts "BASH = #{ssh.exec! 'echo $BASH'}"
   puts "PATH = #{ssh.exec! 'echo $PATH'}"
+  puts "PATH = #{ssh.exec! 'which ruby'}"
+  puts "PATH = #{ssh.exec! 'which rvm'}"
+  puts "PATH = #{ssh.exec! 'ruby -v'}"
 
   channel = ssh.open_channel do |ch|
     ch.exec "source /usr/local/rvm/scripts/rvm" do |ch, success|
