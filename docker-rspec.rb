@@ -76,6 +76,8 @@ begin
         ch.on_close { puts "done!" }
       end
 
+      channel.wait
+
       ch.exec "echo hi" do |ch, success|
         raise "could not execute command" unless success
 
