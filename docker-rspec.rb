@@ -42,25 +42,28 @@ ssh_password = 'screencast'
 p "#{ssh_user}@#{ssh_host} -p #{ssh_port}"
 
 require 'net/ssh'
+require 'net/ssh/shell'
 Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
   # capture all stderr and stdout output from a remote process
-  puts "Welcome to #{ssh.exec! 'hostname'}"
-  puts "SHELL = #{ssh.exec! 'echo $SHELL'}"
-  puts "PATH = #{ssh.exec! 'echo $PATH'}"
+  ssh.shell do |shell|
+    puts "Welcome to #{shell.excute! 'hostname'}"
+    puts "SHELL = #{shell.excute! 'echo $SHELL'}"
+    puts "BASH = #{shell.excute! 'echo $BASH'}"
+    puts "PATH = #{shell.excute! 'echo $PATH'}"
 
-  # run multiple processes in parallel to completion
-  # 実行スクリプトの作成
-  dir_name = "/var/tmp/popcode"
+    # run multiple processes in parallel to completion
+    # 実行スクリプトの作成
+    dir_name = "/var/tmp/popcode"
 
-  p 0
-  script = "
+    p 0
+    script = "
 cd #{dir_name}
 echo hi
 bundle check --path=vendor/bundle || bundle install --path=vendor/bundle  --clean
 "
 
 # スクリプトの実行
-result = ssh.exec! "#{script}"
+result = shell.excute! "#{script}"
 p result
 p 1
 
@@ -78,7 +81,7 @@ echo 'test:
 ' > config/database.yml
 "
 # スクリプトの実行
-result = ssh.exec! "#{script}"
+result = shell.excute! "#{script}"
 p result
 p 2
 
@@ -91,7 +94,7 @@ bundle exec rake db:create db:schema:load --trace
 "
 
 # スクリプトの実行
-result = ssh.exec! "#{script}"
+result = shell.excute! "#{script}"
 p result
 
 p 3
@@ -105,10 +108,11 @@ bundle exec rspec spec --format progress
 "
 
 # スクリプトの実行
-result = ssh.exec! "#{script}"
+result = shell.excute! "#{script}"
 p result
 
 p 4
+  end
 end
 
 # コンテナの停止
