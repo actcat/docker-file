@@ -42,7 +42,6 @@ ssh_password = 'screencast'
 p "#{ssh_user}@#{ssh_host} -p #{ssh_port}"
 
 require 'net/ssh'
-require 'net/ssh/shell'
 Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
   # capture all stderr and stdout output from a remote process
   channel = ssh.open_channel do |ch|
