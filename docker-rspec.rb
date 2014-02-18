@@ -31,7 +31,7 @@ p running_container_id.chomp!
 
 # 起動中のコンテナへのポートのバインディング
 ssh_addr_str = `sudo docker port #{running_container_id} 22`
-p ssh_addr_str
+p ssh_addr_str.chomp!
 
 ssh_addr = ssh_addr_str.split ':'
 ssh_host = ssh_addr[0]
