@@ -87,6 +87,7 @@ Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |s
       ch.on_close { puts "done!" }
     end
   end
+  ssh.loop
 end
 
 Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
