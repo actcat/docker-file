@@ -42,14 +42,28 @@ ssh_password = 'screencast'
 p "#{ssh_user}@#{ssh_host} -p #{ssh_port}"
 
 require 'net/ssh'
-require 'net/ssh/shell'
 Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
   # capture all stderr and stdout output from a remote process
-  ssh.shell do |shell|
-    puts "Welcome to #{shell.execute! 'hostname'}"
-    puts "SHELL = #{shell.execute! 'echo $SHELL'}"
-    puts "BASH = #{shell.execute! 'echo $BASH'}"
-    puts "PATH = #{shell.execute! 'echo $PATH'}"
+  ssh.open_channel do |channel|
+    channel.exec("hostname") do |ch, success|
+      abort "could not execute command" unless success
+      channel.on_data do |ch, data|
+        puts "got stdout: #{data}"
+        channel.send_data "something for stdin\n"
+      end
+
+      channel.on_extended_data do |ch, type, data|
+        puts "got stderr: #{data}"
+      end
+
+      channel.on_close do |ch|
+        puts "channel is closing!"
+      end
+    end
+    puts "Welcome to "
+    puts "SHELL = #{channel.exec 'echo $SHELL'}"
+    puts "BASH = #{channel.exec 'echo $BASH'}"
+    puts "PATH = #{channel.exec 'echo $PATH'}"
 
     # run multiple processes in parallel to completion
     # 実行スクリプトの作成
@@ -63,7 +77,7 @@ bundle check --path=vendor/bundle || bundle install --path=vendor/bundle  --clea
 "
 
 # スクリプトの実行
-result = shell.execute! "#{script}"
+result = channel.exec "#{script}"
 p result
 p 1
 
@@ -81,7 +95,7 @@ echo 'test:
 ' > config/database.yml
 "
 # スクリプトの実行
-result = shell.execute! "#{script}"
+result = channel.exec "#{script}"
 p result
 p 2
 
@@ -94,7 +108,7 @@ bundle exec rake db:create db:schema:load --trace
 "
 
 # スクリプトの実行
-result = shell.execute! "#{script}"
+result = channel.exec "#{script}"
 p result
 
 p 3
@@ -108,12 +122,14 @@ bundle exec rspec spec --format progress
 "
 
 # スクリプトの実行
-result = shell.execute! "#{script}"
+result = channel.exec "#{script}"
 p result
 
 p 4
   end
 end
+
+ssh.loop
 
 # コンテナの停止
 `sudo docker stop #{running_container_id}`
