@@ -41,17 +41,6 @@ ssh_password = 'screencast'
 
 p "#{ssh_user}@#{ssh_host} -p #{ssh_port}"
 
-require 'net/ssh'
-module Net
-  module SSH
-    module Connection
-      class Channnell
-        
-      end
-    end
-  end
-end
-
 Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
   # capture all stderr and stdout output from a remote process
   ssh.open_channel do |channel|
@@ -144,9 +133,6 @@ result = channel.exec "#{script}"
 p result
 
 p 4
-
-require 'pry'
-pry
 
 p channel
   end
