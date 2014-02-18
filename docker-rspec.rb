@@ -46,6 +46,10 @@ require 'net/ssh'
 Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
   # capture all stderr and stdout output from a remote process
   output = ssh.exec!("hostname")
+  p output
+
+  output = ssh.exec!("pwd")
+  p output
 
   # capture only stdout matching a particular pattern
   stdout = ""
