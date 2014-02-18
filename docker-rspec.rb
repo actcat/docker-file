@@ -58,7 +58,7 @@ begin
     puts "PATH = #{ssh.exec! 'ruby -v'}"
 
     channel = ssh.open_channel do |ch|
-      ch.exec "source /usr/local/rvm/scripts/rvm" do |ch, success|
+      ch.exec "source /usr/local/rvm/scripts/rvm; echo $PATH" do |ch, success|
         raise "could not execute command" unless success
 
         # "on_data" is called when the process writes something to stdout
@@ -78,7 +78,7 @@ begin
 
       channel.wait
 
-      ch.exec "echo hi" do |ch, success|
+      ch.exec "echo $PATH" do |ch, success|
         raise "could not execute command" unless success
 
         # "on_data" is called when the process writes something to stdout
