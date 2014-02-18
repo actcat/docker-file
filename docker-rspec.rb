@@ -127,9 +127,10 @@ p result
 
 p 4
   end
+
+  ssh.loop
 end
 
-ssh.loop
 
 # コンテナの停止
 `sudo docker stop #{running_container_id}`
