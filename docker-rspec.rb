@@ -87,7 +87,9 @@ Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |s
       ch.on_close { puts "done!" }
     end
   end
+end
 
+Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
   # run multiple processes in parallel to completion
   # 実行スクリプトの作成
   dir_name = "/var/tmp/popcode"
