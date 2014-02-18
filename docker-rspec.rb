@@ -76,7 +76,7 @@ begin
         ch.on_close { puts "done!" }
       end
 
-      ch.exec "#{ssh.exec! 'echo $PATH'}" do |ch, success|
+      ch.exec "echo $PATH" do |ch, success|
         raise "could not execute command" unless success
 
         # "on_data" is called when the process writes something to stdout
