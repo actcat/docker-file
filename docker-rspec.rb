@@ -45,11 +45,28 @@ require 'net/ssh'
 Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
   # capture all stderr and stdout output from a remote process
   exec_results = []
-  puts ssh.exec! "source ~/.profile"
   puts "Welcome to #{ssh.exec! 'hostname'}"
   puts "SHELL = #{ssh.exec! 'echo $SHELL'}"
   puts "BASH = #{ssh.exec! 'echo $BASH'}"
   puts "PATH = #{ssh.exec! 'echo $PATH'}"
+
+  channel = ssh.open_channel do |ch|
+    ch.exec "source /usr/local/rvm/scripts/rvm" do |ch, success|
+      raise "could not execute command" unless success
+
+      # "on_data" is called when the process writes something to stdout
+      ch.on_data do |c, data|
+        $stdout.print data
+      end
+
+      # "on_extended_data" is called when the process writes something to stderr
+      ch.on_extended_data do |c, type, data|
+        $stderr.print data
+      end
+
+      ch.on_close { puts "done!" }
+    end
+  end
 
   # run multiple processes in parallel to completion
   # 実行スクリプトの作成
