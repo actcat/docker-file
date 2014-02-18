@@ -45,11 +45,11 @@ require 'net/ssh'
 require 'net/ssh/shell'
 Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
   # capture all stderr and stdout output from a remote process
-  ssh.shell do |shell|
-    puts "Welcome to #{shell.excute! 'hostname'}"
-    puts "SHELL = #{shell.excute! 'echo $SHELL'}"
-    puts "BASH = #{shell.excute! 'echo $BASH'}"
-    puts "PATH = #{shell.excute! 'echo $PATH'}"
+  channel = ssh.open_channel do |ch|
+    puts "Welcome to #{channel.exec! 'hostname'}"
+    puts "SHELL = #{channel.exec! 'echo $SHELL'}"
+    puts "BASH = #{channel.exec! 'echo $BASH'}"
+    puts "PATH = #{channel.exec! 'echo $PATH'}"
 
     # run multiple processes in parallel to completion
     # 実行スクリプトの作成
@@ -63,7 +63,7 @@ bundle check --path=vendor/bundle || bundle install --path=vendor/bundle  --clea
 "
 
 # スクリプトの実行
-result = shell.excute! "#{script}"
+result = channel.exec! "#{script}"
 p result
 p 1
 
@@ -81,7 +81,7 @@ echo 'test:
 ' > config/database.yml
 "
 # スクリプトの実行
-result = shell.excute! "#{script}"
+result = channel.exec! "#{script}"
 p result
 p 2
 
@@ -94,7 +94,7 @@ bundle exec rake db:create db:schema:load --trace
 "
 
 # スクリプトの実行
-result = shell.excute! "#{script}"
+result = channel.exec! "#{script}"
 p result
 
 p 3
@@ -108,7 +108,7 @@ bundle exec rspec spec --format progress
 "
 
 # スクリプトの実行
-result = shell.excute! "#{script}"
+result = channel.exec! "#{script}"
 p result
 
 p 4
