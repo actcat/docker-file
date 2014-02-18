@@ -16,7 +16,6 @@ RUN apt-get -y install build-essential openssl libreadline6 libreadline6-dev cur
 # Install rvm
 RUN curl -L https://get.rvm.io | bash -s stable
 RUN echo 'source /usr/local/rvm/scripts/rvm' >> /etc/bash.bashrc
-RUN echo 'source /usr/local/rvm/scripts/rvm' >> /root/.bashrc
 ENV PATH /usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # Install ruby 2.0.0
