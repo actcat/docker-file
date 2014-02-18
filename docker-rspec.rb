@@ -43,49 +43,26 @@ p "#{ssh_user}@#{ssh_host} -p #{ssh_port}"
 
 Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
   # capture all stderr and stdout output from a remote process
-  ssh.open_channel do |channel|
-    exec_results = []
-    channel.exec("hostname") do |ch, success|
-      abort "could not execute command" unless success
-      channel.on_data do |ch, data|
-        puts "got stdout: #{data}"
-        exec_results << data
-        channel.send_data "something for stdin\n"
-      end
+  exec_results = []
 
-      channel.on_extended_data do |ch, type, data|
-        puts "got stderr: #{data}"
-      end
+  puts "Welcome to #{ssh.exec! 'hostname'}"
+  puts "SHELL = #{ssh.exec! 'echo $SHELL'}"
+  puts "BASH = #{ssh.exec! 'echo $BASH'}"
+  puts "PATH = #{ssh.exec! 'echo $PATH'}"
 
-      channel.on_close do |ch|
-        puts "channel is closing!"
-      end
-    end
-    channel.exec 'echo $SHELL' do |ch, success|
-      channel.on_data do |ch, data|
-        exec_results << data
-      end
-    end
+  # run multiple processes in parallel to completion
+  # 実行スクリプトの作成
+  dir_name = "/var/tmp/popcode"
 
-
-    puts "Welcome to "
-    puts "SHELL = #{channel.exec 'echo $SHELL'}"
-    puts "BASH = #{channel.exec 'echo $BASH'}"
-    puts "PATH = #{channel.exec 'echo $PATH'}"
-
-    # run multiple processes in parallel to completion
-    # 実行スクリプトの作成
-    dir_name = "/var/tmp/popcode"
-
-    p 0
-    script = "
+  p 0
+  script = "
 cd #{dir_name}
 echo hi
 bundle check --path=vendor/bundle || bundle install --path=vendor/bundle  --clean
 "
 
 # スクリプトの実行
-result = channel.exec "#{script}"
+result = ssh.exec! "#{script}"
 p result
 p 1
 
@@ -103,7 +80,7 @@ echo 'test:
 ' > config/database.yml
 "
 # スクリプトの実行
-channel.exec "#{script}" do |ch, success|
+ssh.exec! "#{script}" do |ch, success|
 end
 
 # 実行スクリプトの作成
@@ -115,7 +92,7 @@ bundle exec rake db:create db:schema:load --trace
 "
 
 # スクリプトの実行
-result = channel.exec "#{script}"
+result = ssh.exec! "#{script}"
 p result
 
 p 3
@@ -129,17 +106,13 @@ bundle exec rspec spec --format progress
 "
 
 # スクリプトの実行
-result = channel.exec "#{script}"
+result = ssh.exec! "#{script}"
 p result
 
 p 4
 
 p channel
-  end
-
-  ssh.loop
 end
-
 
 # コンテナの停止
 `sudo docker stop #{running_container_id}`
