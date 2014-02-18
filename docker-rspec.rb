@@ -69,11 +69,15 @@ Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |s
       ch.on_close { puts "done!" }
     end
   end
+
+  puts "PATH = #{ssh.exec! 'echo $PATH'}"
 end
 
 Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
   # run multiple processes in parallel to completion
   # 実行スクリプトの作成
+  puts "PATH = #{ssh.exec! 'echo $PATH'}"
+
   dir_name = "/var/tmp/popcode"
 
   p 0
@@ -131,8 +135,6 @@ result = ssh.exec! "#{script}"
 p result
 
 p 4
-
-p channel
 end
 
 # コンテナの停止
