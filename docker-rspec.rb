@@ -26,7 +26,7 @@ end
 # dockerコンテナを起動してsshポートを立ち上げる
 
 # コンテナの起動とsshポートの開放
-running_container_id = `sudo docker run -d -p 22 #{container_name}:#{container_tag} /usr/sbin/sshd -D`
+running_container_id = `sudo docker run -d -p 22 #{container_repository}:#{container_tag} /usr/sbin/sshd -D`
 # 起動中のコンテナへのポートのバインディング
 ssh_addr_str = `sudo docker port #{running_container_id} 22`
 ssh_addr = ssh_addr_str.split ':'
