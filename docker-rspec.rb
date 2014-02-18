@@ -57,11 +57,31 @@ Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |s
       # "on_data" is called when the process writes something to stdout
       ch.on_data do |c, data|
         $stdout.print data
+        puts data
       end
 
       # "on_extended_data" is called when the process writes something to stderr
       ch.on_extended_data do |c, type, data|
         $stderr.print data
+        puts data
+      end
+
+      ch.on_close { puts "done!" }
+    end
+
+     ch.exec "echo $PATH" do |ch, success|
+      raise "could not execute command" unless success
+
+      # "on_data" is called when the process writes something to stdout
+      ch.on_data do |c, data|
+        $stdout.print data
+        puts data
+      end
+
+      # "on_extended_data" is called when the process writes something to stderr
+      ch.on_extended_data do |c, type, data|
+        $stderr.print data
+        puts data
       end
 
       ch.on_close { puts "done!" }
