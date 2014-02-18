@@ -53,9 +53,9 @@ begin
     puts "SHELL = #{ssh.exec! 'echo $SHELL'}"
     puts "BASH = #{ssh.exec! 'echo $BASH'}"
     puts "PATH = #{ssh.exec! 'echo $PATH'}"
-    puts "PATH = #{ssh.exec! 'which ruby'}"
-    puts "PATH = #{ssh.exec! 'which rvm'}"
-    puts "PATH = #{ssh.exec! 'ruby -v'}"
+    puts "which ruby => #{ssh.exec! 'which ruby'}"
+    puts "which rvm => #{ssh.exec! 'which rvm'}"
+    puts "ruby -v => #{ssh.exec! 'ruby -v'}"
 
     channel = ssh.open_channel do |ch|
       ch.exec "source /usr/local/rvm/scripts/rvm; echo 'path changing...';" do |ch, success|
@@ -101,12 +101,9 @@ begin
 
     channel.wait
 
-    puts "PATH = #{ssh.exec! 'echo $PATH'}"
 
     # run multiple processes in parallel to completion
     # 実行スクリプトの作成
-    puts "PATH = #{ssh.exec! 'echo $PATH'}"
-
     dir_name = "/var/tmp/popcode"
 
     p 0
