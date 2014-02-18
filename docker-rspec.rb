@@ -100,10 +100,6 @@ begin
 
     puts "PATH = #{ssh.exec! 'echo $PATH'}"
 
-  ssh.loop { true }
-  end
-
-  Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
     # run multiple processes in parallel to completion
     # 実行スクリプトの作成
     puts "PATH = #{ssh.exec! 'echo $PATH'}"
@@ -168,6 +164,12 @@ p 4
   end
 rescue => e
   p e
+  # コンテナの停止
+  `sudo docker stop #{running_container_id}`
+
+  # コンテナの破棄
+  `sudo docker rm #{running_container_id}`
+  raise e
 end
 
 # コンテナの停止
