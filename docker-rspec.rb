@@ -45,7 +45,7 @@ require 'net/ssh'
 Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
   # capture all stderr and stdout output from a remote process
   exec_results = []
-
+  puts ssh.exec! "source ~/.profile"
   puts "Welcome to #{ssh.exec! 'hostname'}"
   puts "SHELL = #{ssh.exec! 'echo $SHELL'}"
   puts "BASH = #{ssh.exec! 'echo $BASH'}"
