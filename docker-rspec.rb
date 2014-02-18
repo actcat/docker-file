@@ -44,7 +44,8 @@ p "#{ssh_user}@#{ssh_host} -p #{ssh_port}"
 require 'net/ssh'
 Net::SSH.start(ssh_host, ssh_user, password: ssh_password, port: ssh_port) do |ssh|
   # capture all stderr and stdout output from a remote process
-  puts "Welcome to #{ssh.exec!("hostname")}"
+  puts "Welcome to #{ssh.exec! 'hostname'}"
+  puts "PATH = #{ssh.exec! 'echo $PATH'}"
 
   # run multiple processes in parallel to completion
   # 実行スクリプトの作成

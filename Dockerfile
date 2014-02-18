@@ -3,6 +3,7 @@ MAINTAINER Koichiro Sumi "koichiro.sumi@actcat.co.jp"
 
 # Ensure UTF-8
 RUN locale-gen en_US.UTF-8
+RUN update-locale en_US.UTF-8
 ENV LANG       en_US.UTF-8
 ENV LC_ALL     en_US.UTF-8
 
