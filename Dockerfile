@@ -3,10 +3,10 @@ MAINTAINER Koichiro Sumi "koichiro.sumi@actcat.co.jp"
 
 # Ensure UTF-8
 RUN locale-gen en_US.UTF-8
-RUN update-locale en_US.UTF-8
-ENV LANG       en_US.UTF-8
-ENV LC_ALL     en_US.UTF-8
+RUN locale-gen ja_JP.UTF-8
+RUN locale-gen en_US
 
+# Install basic packages
 RUN apt-get update
 RUN apt-get upgrade -y
 
@@ -23,6 +23,8 @@ RUN ./root/.rbenv/plugins/ruby-build/install.sh
 ENV PATH /root/.rbenv/bin:$PATH
 RUN echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh # or /etc/profile
 RUN echo 'eval "$(rbenv init -)"' >> .bashrc
+# RUN echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> /etc/bash.bashrc
+# RUN echo 'eval "$(rbenv init -)"' >> /etc/bash.bashrc
 
 # Install multiple versions of ruby
 ENV CONFIGURE_OPTS --disable-install-doc
@@ -40,6 +42,10 @@ RUN echo 'root:screencast' |chpasswd
 
 EXPOSE 22
 CMD    /usr/sbin/sshd -D
+
+RUN echo 'PermitUserEnvironment yes' >> /etc/ssh/sshd_config
+RUN mkdir ~/.ssh
+RUN echo $PATH >> ~/.ssh/environment
 
 # TODO: Redis
 # TODO: MySQL
