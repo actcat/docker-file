@@ -42,11 +42,6 @@ RUN echo 'root:screencast' |chpasswd
 
 EXPOSE 22
 CMD    /usr/sbin/sshd -D
-
-RUN echo 'PermitUserEnvironment yes' >> /etc/ssh/sshd_config
-RUN mkdir ~/.ssh
-RUN echo $PATH >> ~/.ssh/environment
-
 # TODO: Redis
 # TODO: MySQL
 # TODO: PostgreSQL
