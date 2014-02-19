@@ -10,18 +10,28 @@ ENV LC_ALL     en_US.UTF-8
 RUN apt-get update
 RUN apt-get upgrade -y
 
-# Install rvm Prerequisites
-RUN apt-get -y install build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison subversion pkg-config libpq5 libpq-dev build-essential git-core curl libcurl4-gnutls-dev python-software-properties libffi-dev libgdbm-dev vim
+# Install packages for building ruby
+RUN apt-get update
+RUN apt-get install -y --force-yes build-essential curl git
+RUN apt-get install -y --force-yes zlib1g-dev libssl-dev libreadline-dev libyaml-dev libxml2-dev libxslt-dev
+RUN apt-get clean
 
-# Install rvm
-RUN curl -L https://get.rvm.io | bash -s stable
-RUN echo 'source /usr/local/rvm/scripts/rvm' >> /etc/bash.bashrc
-ENV PATH /usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# Install rbenv and ruby-build
+RUN git clone https://github.com/sstephenson/rbenv.git /root/.rbenv
+RUN git clone https://github.com/sstephenson/ruby-build.git /root/.rbenv/plugins/ruby-build
+RUN ./root/.rbenv/plugins/ruby-build/install.sh
+ENV PATH /root/.rbenv/bin:$PATH
+RUN echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh # or /etc/profile
+RUN echo 'eval "$(rbenv init -)"' >> .bashrc
 
-# Install ruby 2.0.0
-RUN /bin/bash -l -c 'rvm install 2.0.0'
-CMD /bin/bash -l -c 'rvm use 2.0.0 --default'
-RUN /bin/bash -l -c 'gem install bundler --no-ri --no-rdoc'
+# Install multiple versions of ruby
+ENV CONFIGURE_OPTS --disable-install-doc
+ADD ./versions.txt /root/versions.txt
+RUN xargs -L 1 rbenv install < /root/versions.txt
+
+# Install Bundler for each version of ruby
+RUN echo 'gem: --no-rdoc --no-ri' >> /.gemrc
+RUN bash -l -c 'for v in $(cat /root/versions.txt); do rbenv global $v; gem install bundler; done'
 
 # SSHD
 RUN apt-get install -y openssh-server
@@ -31,7 +41,6 @@ RUN echo 'root:screencast' |chpasswd
 EXPOSE 22
 CMD    /usr/sbin/sshd -D
 
-# Redis
-RUN         apt-get -y install redis-server
+# TODO: Redis
 # TODO: MySQL
 # TODO: PostgreSQL

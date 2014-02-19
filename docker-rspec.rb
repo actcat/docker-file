@@ -2,11 +2,14 @@
 # docker import URL|- [REPOSITORY[:TAG]]
 
 tar_container = "latest.tar"
-container_repository = "latest"
-container_tag = "new"
+container_repository = "latest" # base container image
+container_tag = "new" # base container image's tag
+tar_container_url = ""
 
-# TODO: importを使うとディスクが非常に消費されるため、各ユーザ環境は既存イメージからの派生にする必要がある
+# TODO: importを使うとディスクが非常に消費されるため、各ユーザ環境は既存イメージからの派生にする必要がある(おそらく、現状、必ずcontainerを破棄し、再度実行時はimageからcontainerを生成しているので、ユーザは毎回ほぼクリーンな環境を使っている&使わざるを得ない
 
+
+# TODO: baseとなるimageの最新版が見つからなかった場合
 if File.exist?(tar_container)
   # ローカルにファイルがある場合
   `cat #{tar_container} | sudo docker import - #{container_repository}:#{container_tag}`
