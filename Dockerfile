@@ -26,8 +26,8 @@ RUN echo 'eval "$(rbenv init -)"' >> .bashrc
 
 # Install multiple versions of ruby
 ENV CONFIGURE_OPTS --disable-install-doc
-ADD ./versions.txt /root/versions.txt
-RUN xargs -L 1 rbenv install < /root/versions.txt
+ADD ./ruby-versions.txt /root/ruby-versions.txt
+RUN xargs -L 1 rbenv install < /root/ruby-versions.txt
 
 # Install Bundler for each version of ruby
 RUN echo 'gem: --no-rdoc --no-ri' >> /.gemrc
